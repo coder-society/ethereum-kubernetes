@@ -1,0 +1,110 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ${AUTHORITY_NAME}-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  storageClassName: standard
+  nfs:
+    server: ${NFS_SERVER}
+    path: ${NFS_PATH}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ${AUTHORITY_NAME}-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: ${AUTHORITY_NAME}-volume
+---
+kind: Deployment
+apiVersion: apps/v1beta1
+metadata:
+  name: ${AUTHORITY_NAME}
+  labels:
+    component: ${AUTHORITY_NAME}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: ${AUTHORITY_NAME}
+  template:
+    metadata:
+      labels:
+        component: ${AUTHORITY_NAME}
+    spec:
+      containers:
+        - name: ${AUTHORITY_NAME}
+          image: ethereum/client-go:alltools-v1.8.7
+          ports:
+           - containerPort: 8545
+             name: rpc
+           - containerPort: 30303
+             name: discovery-tcp
+             protocol: TCP
+           - containerPort: 30303
+             name: discovery-udp
+             protocol: UDP
+          command: # Using /bin/sh as a workaround to get HOSTNAME. See https://github.com/kubernetes/kubernetes/issues/57726
+           - "/bin/sh"
+           - "-c"
+           - >
+               geth
+               --networkid=${NETWORK_ID}
+               --bootnodes=enode://${BOOT_NODE_ID}@$(BOOTNODE_SERVICE_HOST):30301
+               --ethstats=$HOSTNAME:secret@ethstats.default.svc.cluster.local:3000
+               --rpc
+               --rpcaddr=0.0.0.0
+               --rpccorsdomain=\"*\"
+               --datadir=/ethereum
+               --debug
+               --verbosity=4
+               --identity=$HOSTNAME
+               --gasprice '1'
+               --syncmode 'full'
+               --rpcport 8501
+               --rpcapi 'personal,db,eth,net,web3,txpool,miner'
+               --unlock '${AUTHORITY_ADDRESS}'
+               --password /tmp/${AUTHORITY_NAME}-password.txt
+               --mine
+          volumeMounts:
+            - name: ethereum-volume
+              mountPath: "/ethereum"
+            - name: ${AUTHORITY_NAME}-password
+              mountPath: "/tmp"
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "50Mi"
+            limits:
+              cpu: "100m"
+              memory: "500Mi"
+      initContainers:
+        - name: genesis
+          image: ethereum/client-go:alltools-v1.8.7
+          command: ["geth"]
+          args: ["--datadir=/ethereum", "init", "/tmp/genesis.json"]
+          volumeMounts:
+            - name: genesis
+              mountPath: "/tmp"
+              readOnly: true
+            - name: ethereum-volume
+              mountPath: "/ethereum"
+      volumes:
+        - name: genesis
+          secret:
+            secretName: genesis
+        - name: ${AUTHORITY_NAME}-password
+          secret:
+            secretName: ${AUTHORITY_NAME}-password
+        - name: ethereum-volume
+          persistentVolumeClaim:
+            claimName: ${AUTHORITY_NAME}-volume-claim
