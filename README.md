@@ -6,6 +6,7 @@
 4.  Verify Ethereum network
 
 ## 1. Generate Kubernetes manifest files
+Update `.env.authority1` and `.env.authority2`. The `NFS_PATH` should match the path to the authority1 and authority2 folder in this repository.
 
 ```bash
 source authority/.env.authority1
@@ -41,6 +42,17 @@ kubectl port-forward <ethstats-pod-id> 3000:3000
 Open your web browser and navigate to localhost:3000.
 You should see that the authority nodes are mining blocks.
 
+## Delete Kubernetes resources
+```bash
+kubectl delete secret bootkey
+kubectl delete secret genesis
+kubectl delete secret authority1-password
+kubectl delete secret authority2-password
+kubectl delete -f bootnode.yaml
+kubectl delete -f ethstats.yaml
+kubectl delete -f authority1.yaml
+kubectl delete -f authority2.yaml
+```
 
 ## FAQ
 
