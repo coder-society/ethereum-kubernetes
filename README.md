@@ -85,7 +85,10 @@ kubectl port-forward <ethstats-pod-id> 3000:3000
 Open your web browser and navigate to localhost:3000.
 You should see that the authority nodes are mining blocks.
 
-## Delete Kubernetes resources
+## 5. Delete Kubernetes resources
+
+Once you are done, you can delete the Kubernetes resources:
+
 ```bash
 kubectl delete secret bootkey
 kubectl delete secret genesis
@@ -96,3 +99,5 @@ kubectl delete -f ethstats.yaml
 kubectl delete -f authority1.yaml
 kubectl delete -f authority2.yaml
 ```
+
+To fully delete the blockchain you also need to delete the geth folders in the authority1 and authority2 directories.
