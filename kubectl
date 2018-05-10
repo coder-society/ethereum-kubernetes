@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+import os.path
+
+_root_dir = os.path.abspath(os.path.dirname(__file__))
+
+sys.exit(subprocess.call([
+    'kubectl',
+    '--kubeconfig',
+    'infrastructure/production/assets/auth/kubeconfig',
+] + sys.argv[1:]))
