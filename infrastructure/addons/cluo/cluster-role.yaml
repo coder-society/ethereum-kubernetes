@@ -4,7 +4,7 @@ metadata:
   name: reboot-coordinator
 rules:
   - apiGroups:
-      - ""
+      - ''
     resources:
       - nodes
     verbs:
@@ -13,7 +13,7 @@ rules:
       - watch
       - update
   - apiGroups:
-      - ""
+      - ''
     resources:
       - configmaps
     verbs:
@@ -23,14 +23,14 @@ rules:
       - list
       - watch
   - apiGroups:
-      - ""
+      - ''
     resources:
       - events
     verbs:
       - create
       - watch
   - apiGroups:
-      - ""
+      - ''
     resources:
       - pods
     verbs:
@@ -38,7 +38,7 @@ rules:
       - list
       - delete
   - apiGroups:
-      - "extensions"
+      - extensions
     resources:
       - daemonsets
     verbs:
