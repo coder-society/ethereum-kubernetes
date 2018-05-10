@@ -1,9 +1,33 @@
 # Setup a permissioned Ethereum blockchain on Kubernetes
 
-1.  Generate Kubernetes manifest files
-2.  Create secrets
-3.  Apply manifest files
-4.  Verify Ethereum network
+## Prerequisites
+
+### envsubst
+
+You will need envsubst for generating the Kubernetes manifest files.
+It's part of the gettext package which you can install e.g. with homebrew on macOS:
+
+```bash
+brew install gettext
+brew link --force gettext
+```
+
+### kubectl
+
+We also need [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/). You can also install with homebrew:
+
+```bash
+brew install kubectl
+```
+
+### Kubernetes cluster
+
+Last but not least we need a Kubernetes cluster. Locally you can use [minikube](https://github.com/kubernetes/minikube) which you can also install with homebrew:
+
+```bash
+brew cask install minikube
+```
+
 
 ## 1. Generate Kubernetes manifest files
 Update `.env.authority1` and `.env.authority2`. The `NFS_PATH` should match the path to the authority1 and authority2 folder in this repository.
@@ -58,7 +82,7 @@ kubectl delete -f authority2.yaml
 
 ### Local setup with Minikube
 
-Use nfs for the persistent volume to prevent permission errors:
+We use nfs for the persistent volume to prevent permission errors:
 
 ##### Export the /Users directory as nfs from your host machine
 
