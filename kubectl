@@ -8,5 +8,5 @@ _root_dir = os.path.abspath(os.path.dirname(__file__))
 sys.exit(subprocess.call([
     'kubectl',
     '--kubeconfig',
-    'infrastructure/production/assets/auth/kubeconfig',
+    'production.ethereum-1.kubeconfig',
 ] + sys.argv[1:]))

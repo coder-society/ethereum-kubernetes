@@ -85,7 +85,7 @@ spec:
     spec:
       accessModes:
       - ReadWriteOnce
-      storageClassName: aws-efs
+      storageClassName: general
       resources:
         requests:
           storage: 1Gi
