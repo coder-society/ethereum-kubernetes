@@ -70,7 +70,7 @@ spec:
                --identity=$HOSTNAME
                --gasprice '1'
                --syncmode 'full'
-               --rpcport 8501
+               --rpcport 8545
                --rpcapi 'personal,db,eth,net,web3,txpool,miner'
                --unlock '${AUTHORITY_ADDRESS}'
                --password /tmp/${AUTHORITY_NAME}-password.txt
@@ -108,3 +108,17 @@ spec:
         - name: ethereum-volume
           persistentVolumeClaim:
             claimName: ${AUTHORITY_NAME}-volume-claim
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${AUTHORITY_NAME}
+spec:
+  type: NodePort
+  selector:
+    component: ${AUTHORITY_NAME}
+  ports:
+    - port: 8545
+      targetPort: 8545
+      name: rpc
+      protocol: TCP
