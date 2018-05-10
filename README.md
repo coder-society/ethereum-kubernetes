@@ -101,3 +101,8 @@ kubectl delete -f authority2.yaml
 ```
 
 To fully delete the blockchain you also need to delete the geth folders in the authority1 and authority2 directories.
+
+
+## 6. Learn more
+
+Learn more about Coder Society, a network of cutting edge developers, designers and product engineers at https://codersociety.com
