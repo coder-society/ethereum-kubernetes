@@ -1,0 +1,4 @@
+assets/
+.terraform/
+terraform.tfstate*
+*-secret.yaml
