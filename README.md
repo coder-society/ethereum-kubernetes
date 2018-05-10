@@ -22,10 +22,29 @@ brew install kubectl
 
 ### Kubernetes cluster
 
-Last but not least we need a Kubernetes cluster. Locally you can use [minikube](https://github.com/kubernetes/minikube) which you can also install with homebrew:
+We need a Kubernetes cluster. Locally you can use [minikube](https://github.com/kubernetes/minikube) which you can also install with homebrew:
 
 ```bash
 brew cask install minikube
+minikube start
+```
+
+### Network File System
+
+Last but not least we need a NFS for the persistent volume. For your local minikube setup you can do the following:
+
+##### Export the /Users directory as nfs from your host machine
+
+```
+echo "/Users -network 192.168.99.0 -mask 255.255.255.0 -alldirs -maproot=root:wheel" | sudo tee -a /etc/exports
+sudo nfsd restart
+```
+
+##### Mount the /Users directory in the VM
+
+```
+minikube ssh -- sudo umount /Users
+minikube ssh -- sudo busybox mount -t nfs 192.168.99.1:/Users /Users -o nolock,tcp,rw
 ```
 
 
@@ -76,25 +95,4 @@ kubectl delete -f bootnode.yaml
 kubectl delete -f ethstats.yaml
 kubectl delete -f authority1.yaml
 kubectl delete -f authority2.yaml
-```
-
-## FAQ
-
-### Local setup with Minikube
-
-We use nfs for the persistent volume to prevent permission errors:
-
-##### Export the /Users directory as nfs from your host machine
-
-```
-echo "/Users -network 192.168.99.0 -mask 255.255.255.0 -alldirs -maproot=root:wheel" | sudo tee -a /etc/exports
-sudo nfsd restart
-```
-
-##### Mount the /Users directory in the VM
-
-```
-minikube start
-minikube ssh -- sudo umount /Users
-minikube ssh -- sudo busybox mount -t nfs 192.168.99.1:/Users /Users -o nolock,tcp,rw
 ```
