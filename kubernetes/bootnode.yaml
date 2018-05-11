@@ -21,14 +21,11 @@ spec:
           ports:
             - containerPort: 8545
               name: rpc
-            - containerPort: 30303
-              name: discovery-tcp
-              protocol: TCP
-            - containerPort: 30303
-              name: discovery-udp
-              protocol: UDP
             - containerPort: 30301
-              name: bootnode-udp
+              name: udp
+              protocol: UDP
+            - containerPort: 30303
+              name: ipc
               protocol: UDP
           command:
             - bootnode
@@ -63,15 +60,11 @@ spec:
       targetPort: 8545
       name: rpc
       protocol: TCP
-    - port: 30303
-      targetPort: 30303
-      name: discovery-tcp
-      protocol: TCP
-    - port: 30303
-      targetPort: 30303
-      name: discovery-udp
-      protocol: UDP
     - port: 30301
       targetPort: 30301
-      name: bootnode-udp
+      name: udp
+      protocol: UDP
+    - port: 30303
+      targetPort: 30303
+      name: ipc
       protocol: UDP

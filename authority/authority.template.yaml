@@ -23,10 +23,7 @@ spec:
             - containerPort: 8545
               name: rpc
             - containerPort: 30303
-              name: discovery-tcp
-              protocol: TCP
-            - containerPort: 30303
-              name: discovery-udp
+              name: ipc
               protocol: UDP
           command:
             - /bin/sh
@@ -99,3 +96,7 @@ spec:
       targetPort: 8545
       name: rpc
       protocol: TCP
+    - port: 30303
+      targetPort: 30303
+      name: ipc
+      protocol: UDP
