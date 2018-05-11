@@ -35,7 +35,7 @@ spec:
               --rpc --rpcaddr=0.0.0.0 --rpccorsdomain=\"*\" --datadir=/ethereum
               --debug --verbosity=4 --identity=$HOSTNAME --gasprice '1'
               --syncmode 'full' --rpcport 8545 --rpcapi
-              'personal,db,eth,net,web3,txpool,miner' --unlock
+              'personal,db,eth,net,web3,txpool,miner,debug' --unlock
               '${AUTHORITY_ADDRESS}' --password
               /tmp/${AUTHORITY_NAME}-password.txt --mine
           volumeMounts:
@@ -43,13 +43,6 @@ spec:
               mountPath: /ethereum
             - name: ${AUTHORITY_NAME}-password
               mountPath: /tmp
-          resources:
-            requests:
-              cpu: 25m
-              memory: 50Mi
-            limits:
-              cpu: 100m
-              memory: 500Mi
       initContainers:
       - name: init-keystore
         image: aknudsen/init-ethereum-keystore:1.0.2

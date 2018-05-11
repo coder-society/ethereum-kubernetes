@@ -22,40 +22,31 @@ brew install kubectl
 
 ### Kubernetes cluster
 
-We need a Kubernetes cluster. Locally we stick with Minikube and in the cloud self-rolled clusters
-on AWS.
+We need a Kubernetes cluster. Locally we stick with [Minikube](https://github.com/kubernetes/minikube) and in the cloud we use our self-rolled [cluster on AWS](https://github.com/coder-society/k8s-aws/).
 
-#### Minikube
-Locally we use [Minikube](https://github.com/kubernetes/minikube) for our clusters, which you can
-install with homebrew:
+#### Local setup
+
+You can install Minikube with homebrew:
 
 ```bash
 brew cask install minikube
-minikube start
 ```
 
-Locally we need NFS for the persistent volume, for your Minikube setup you can do the following:
+Start Minikube and create the StorageClass which we will need later:
 
-##### Export the /Users directory as nfs from your host machine
-
-```
-echo "/Users -network 192.168.99.0 -mask 255.255.255.0 -alldirs -maproot=root:wheel" | sudo tee -a /etc/exports
-sudo nfsd restart
+```bash
+minikube start --memory 5120 --cpus=4
+kubectl apply -f minikube-general-storageclass.yaml
 ```
 
-##### Mount the /Users directory in the VM
+#### Cloud setup
 
-```
-minikube ssh -- sudo umount /Users
-minikube ssh -- sudo busybox mount -t nfs 192.168.99.1:/Users /Users -o nolock,tcp,rw
-```
-
-#### Cloud
 As for the cloud, we use AWS. In order to bootstrap and administrate clusters on AWS we use the
 [kops](https://github.com/kubernetes/kops) tool, although via our opinionated wrapper
 [k8s-aws](https://github.com/coder-society/k8s-aws/).
 
 ## 1. Generate Kubernetes manifest files
+
 In order to generate our Kubernetes manifests, beneath kubernetes/, run `./generate-manifests.py`.
 
 ## 2. Apply manifest files
