@@ -13,6 +13,6 @@ if not os.path.isdir(_KEYSTORE_DIR):
 
 if not os.path.exists(os.path.join(_DATA_DIR, 'keystore')):
     print('Initializing keystore dir')
-    shutil.copytree(_KEYSTORE_DIR, _DATA_DIR)
+    shutil.copytree(_KEYSTORE_DIR, os.path.join(_DATA_DIR, 'keystore'))
 else:
     print('Keystore dir already exists, no need to initialize it')
