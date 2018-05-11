@@ -1,2 +1,6 @@
 authority1/geth/
 authority2/geth/
+authority*.yaml
+.DS_Store
+*.kubeconfig
+id_rsa*

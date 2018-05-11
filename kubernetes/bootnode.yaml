@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -16,7 +17,7 @@ spec:
     spec:
       containers:
         - name: bootnode
-          image: ethereum/client-go:alltools-v1.8.7
+          image: 'ethereum/client-go:alltools-v1.8.7'
           ports:
             - containerPort: 8545
               name: rpc
@@ -29,21 +30,22 @@ spec:
             - containerPort: 30301
               name: bootnode-udp
               protocol: UDP
-          command: ["bootnode"]
+          command:
+            - bootnode
           args:
-            - "--nodekey=/opt/bootnode/boot.key"
-            - "--verbosity=9"
+            - '--nodekey=/opt/bootnode/boot.key'
+            - '--verbosity=9'
           volumeMounts:
             - name: bootkey
-              mountPath: "/opt/bootnode"
+              mountPath: /opt/bootnode
               readOnly: true
           resources:
             requests:
-              cpu: "10m"
-              memory: "50Mi"
+              cpu: 10m
+              memory: 50Mi
             limits:
-              cpu: "50m"
-              memory: "250Mi"
+              cpu: 50m
+              memory: 250Mi
       volumes:
         - name: bootkey
           secret:
