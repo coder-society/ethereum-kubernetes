@@ -4,3 +4,4 @@ authority*.yaml
 .DS_Store
 *.kubeconfig
 id_rsa*
+kubernetes/*-secret.yaml
