@@ -52,7 +52,7 @@ spec:
               memory: 500Mi
       initContainers:
       - name: init-keystore
-        image: aknudsen/init-ethereum-keystore:1.0.1
+        image: aknudsen/init-ethereum-keystore:1.0.2
         volumeMounts:
         - name: keystore
           mountPath: /var/data/keystore
