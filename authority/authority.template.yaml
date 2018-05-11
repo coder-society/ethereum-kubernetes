@@ -51,20 +51,28 @@ spec:
               cpu: 100m
               memory: 500Mi
       initContainers:
-        - name: genesis
-          image: 'ethereum/client-go:alltools-v1.8.7'
-          command:
-            - geth
-          args:
-            - '--datadir=/ethereum'
-            - init
-            - /tmp/genesis.json
-          volumeMounts:
-            - name: genesis
-              mountPath: /tmp
-              readOnly: true
-            - name: ethereum-volume
-              mountPath: /ethereum
+      - name: init-keystore
+        image: aknudsen/init-ethereum-keystore:1.0.2
+        volumeMounts:
+        - name: keystore
+          mountPath: /var/data/keystore
+          readOnly: true
+        - name: ethereum-volume
+          mountPath: /var/data/ethereum
+      - name: genesis
+        image: 'ethereum/client-go:alltools-v1.8.7'
+        command:
+          - geth
+        args:
+          - '--datadir=/ethereum'
+          - init
+          - /tmp/genesis.json
+        volumeMounts:
+          - name: genesis
+            mountPath: /tmp
+            readOnly: true
+          - name: ethereum-volume
+            mountPath: /ethereum
       volumes:
         - name: genesis
           secret:
@@ -72,6 +80,9 @@ spec:
         - name: ${AUTHORITY_NAME}-password
           secret:
             secretName: ${AUTHORITY_NAME}-password
+        - name: keystore
+          secret:
+            secretName: ${AUTHORITY_NAME}-keystore
   volumeClaimTemplates:
     - metadata:
         name: ethereum-volume
