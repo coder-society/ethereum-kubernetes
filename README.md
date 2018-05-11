@@ -22,16 +22,19 @@ brew install kubectl
 
 ### Kubernetes cluster
 
-We need a Kubernetes cluster. Locally you can use [minikube](https://github.com/kubernetes/minikube) which you can also install with homebrew:
+We need a Kubernetes cluster. Locally we stick with Minikube and in the cloud self-rolled clusters
+on AWS.
+
+#### Minikube
+Locally we use [Minikube](https://github.com/kubernetes/minikube) for our clusters, which you can
+install with homebrew:
 
 ```bash
 brew cask install minikube
 minikube start
 ```
 
-### Network File System
-
-Last but not least we need a NFS for the persistent volume. For your local minikube setup you can do the following:
+Locally we need NFS for the persistent volume, for your Minikube setup you can do the following:
 
 ##### Export the /Users directory as nfs from your host machine
 
@@ -47,62 +50,39 @@ minikube ssh -- sudo umount /Users
 minikube ssh -- sudo busybox mount -t nfs 192.168.99.1:/Users /Users -o nolock,tcp,rw
 ```
 
+#### Cloud
+As for the cloud, we use AWS. In order to bootstrap and administrate clusters on AWS we use the
+[kops](https://github.com/kubernetes/kops) tool, although via our opinionated wrapper
+[k8s-aws](https://github.com/coder-society/k8s-aws/).
 
 ## 1. Generate Kubernetes manifest files
-Update `.env.authority1` and `.env.authority2`. The `NFS_PATH` should match the path to the authority1 and authority2 folder in this repository.
+In order to generate our Kubernetes manifests, beneath kubernetes/, run `./generate-manifests.py`.
+
+## 2. Apply manifest files
 
 ```bash
-source authority/.env.authority1
-envsubst \$AUTHORITY_NAME,\$NFS_SERVER,\$NFS_PATH,\$NETWORK_ID,\$BOOT_NODE_ID,\$AUTHORITY_ADDRESS < authority/authority.template.yaml > authority1.yaml
-
-source authority/.env.authority2
-envsubst \$AUTHORITY_NAME,\$NFS_SERVER,\$NFS_PATH,\$NETWORK_ID,\$BOOT_NODE_ID,\$AUTHORITY_ADDRESS < authority/authority.template.yaml > authority2.yaml
+./kubectl apply -f kubernetes/
 ```
 
-## 2. Create secrets
-
-```bash
-kubectl create secret generic bootkey --from-file=boot.key
-kubectl create secret generic genesis --from-file=genesis.json
-kubectl create secret generic authority1-password --from-file=./authority1-password.txt
-kubectl create secret generic authority2-password --from-file=./authority2-password.txt
-```
-
-## 3. Apply manifest files
-
-```bash
-kubectl apply -f bootnode.yaml
-kubectl apply -f ethstats.yaml
-kubectl apply -f authority1.yaml
-kubectl apply -f authority2.yaml
-```
-
-## 4. Verify Ethereum network
+## 3. Verify Ethereum network
 
 ```
-kubectl port-forward <ethstats-pod-id> 3000:3000
+./kubectl port-forward <ethstats-pod-id> 3000:3000
 ```
 Open your web browser and navigate to localhost:3000.
 You should see that the authority nodes are mining blocks.
 
-## 5. Delete Kubernetes resources
+## 4. Delete Kubernetes resources
 
 Once you are done, you can delete the Kubernetes resources:
 
 ```bash
-kubectl delete secret bootkey
-kubectl delete secret genesis
-kubectl delete secret authority1-password
-kubectl delete secret authority2-password
-kubectl delete -f bootnode.yaml
-kubectl delete -f ethstats.yaml
-kubectl delete -f authority1.yaml
-kubectl delete -f authority2.yaml
+./kubectl delete -f kubernetes/
 ```
 
-To fully delete the blockchain you also need to delete the geth folders in the authority1 and authority2 directories.
+To fully delete the blockchain you also need to delete the geth folders in the authority1
+and authority2 directories.
 
-
-## 6. Learn more
+## 5. Learn more
 
 Learn more about Coder Society, a network of cutting edge developers, designers and product engineers at https://codersociety.com
