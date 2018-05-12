@@ -6,24 +6,6 @@
 
 ## Prerequisites
 
-### envsubst
-
-You will need envsubst for generating the Kubernetes manifest files.
-It's part of the gettext package which you can install e.g. with homebrew on macOS:
-
-```bash
-brew install gettext
-brew link --force gettext
-```
-
-### kubectl
-
-We also need [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/). You can also install with homebrew:
-
-```bash
-brew install kubectl
-```
-
 ### Kubernetes cluster
 
 We need a Kubernetes cluster. Locally we stick with [Minikube](https://github.com/kubernetes/minikube) and in the cloud we use our self-rolled [cluster on AWS](https://github.com/coder-society/k8s-aws/).
@@ -48,6 +30,24 @@ kubectl apply -f minikube-general-storageclass.yaml
 As for the cloud, we use AWS. In order to bootstrap and administrate clusters on AWS we use the
 [kops](https://github.com/kubernetes/kops) tool, although via our opinionated wrapper
 [k8s-aws](https://github.com/coder-society/k8s-aws/).
+
+### kubectl
+
+We also need [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/). You can also install with homebrew:
+
+```bash
+brew install kubectl
+```
+
+### envsubst
+
+You will need envsubst for generating the Kubernetes manifest files.
+It's part of the gettext package which you can install e.g. with homebrew on macOS:
+
+```bash
+brew install gettext
+brew link --force gettext
+```
 
 ## 1. Generate Kubernetes manifest files
 
