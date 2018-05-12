@@ -1,5 +1,9 @@
 # Setup a permissioned Ethereum blockchain on Kubernetes
 
+<div style="text-align:center;">
+  <img src="https://user-images.githubusercontent.com/940749/39957693-79dd4bc6-55f7-11e8-9c7c-b1e775cf332a.png" width="70%">
+</div>
+
 ## Prerequisites
 
 ### envsubst
